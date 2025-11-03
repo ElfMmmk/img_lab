@@ -15,39 +15,6 @@
 	let scaleNum = document.getElementById("scale_num");
 
 	let saveImageButton = document.getElementById("save_button");
-
-	// export default function drawScaledImage(image, widthScale, heightScale) {
-	// 	let firstLoad = false;
-
-	// 	if (!widthScale) {
-	// 		let scale = Math.min((conWidth - 100) / image.width, (conHeight - 100) / image.height);
-	// 		widthScale = scale;
-	// 		heightScale = scale;
-	// 		firstLoad = true;
-	// 	}
-		
-	// 	let margins = getImageMargins(conWidth, conHeight, image.width * widthScale, image.height * heightScale, firstLoad);
-
-	// 	canvas.style.marginLeft = margins.left + 'px';
-	// 	canvas.style.marginTop = margins.top + 'px';
-	// 	canvas.style.position = 'static';
-
-	// 	canvas.width = image.width * widthScale;
-	// 	canvas.height = image.height * heightScale;
-
-	// 	scaleRange.value = (widthScale * 100).toFixed(2);
-	// 	scaleNum.value = (widthScale * 100).toFixed(2);
-
-	// 	let scaledImage = changeImageSize(image, widthScale, heightScale);
-
-	// 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	// 	ctx.putImageData(scaledImage, 0, 0);
-			
-	// 	saveImageButton.onclick = () => { saveImage(scaledImage) } ;
-
-	// 	renderImageData(image, canvas, ctx);
-	// 	setDialogData(image);
-	// }
 	export default function drawScaledImage(image, widthScale, heightScale) {
 		// Берём актуальные размеры контейнера на каждый вызов
 		const cw = con.offsetWidth;
@@ -111,7 +78,6 @@
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		ctx.putImageData(scaledImage, 0, 0);
 		canvas.__oz_meta__ = image?.__oz_meta__ || null;
-		saveImageButton.onclick = () => { saveImage(scaledImage); };
 
 		renderImageData(image, canvas, ctx);
 		setDialogData(image);
