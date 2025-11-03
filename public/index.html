@@ -1,0 +1,513 @@
+    <!DOCTYPE html>
+    <html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <title>Moskvitin Canvas</title>
+    </head>
+    <body>
+        <div class="wrap">
+            <header class="d-flex justify-content-center bd-highlight bg-secondary py-2 header">
+                <button type="button" class="btn btn-primary header__button" data-bs-toggle="modal" data-bs-target="#loadModal">
+                    Загрузить изображение
+                </button>
+                <button type="button" class="btn btn-primary header__button" id="dialog_button" disabled>
+                    Изменить размер
+                </button>
+                <div class="dropdown">
+                <button
+                    type="button"
+                    class="btn btn-primary header__button dropdown-toggle"
+                    id="save_button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    disabled
+                >
+                Сохранить изображение
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#" id="save_as_jpg">Сохранить в JPG</a></li>
+                    <li><a class="dropdown-item" href="#" id="save_as_png">Сохранить в PNG</a></li>
+                    <li><a class="dropdown-item" href="#" id="save_as_gb7">Сохранить в GB7</a></li>
+                </ul>
+                </div>
+                                <button type="button" class="btn btn-primary header__button tool_button" id="open_filter_offcanvas_button" disabled data-toggle="tooltip" title="Фильтрация" data-bs-toggle="offcanvas" data-bs-target="#filter_offcanvas">
+                    <svg class="tool_button__svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 4.6C3 4.03995 3 3.75992 3.10899 3.54601C3.20487 3.35785 3.35785 3.20487 3.54601 3.10899C3.75992 3 4.03995 3 4.6 3H19.4C19.9601 3 20.2401 3 20.454 3.10899C20.6422 3.20487 20.7951 3.35785 20.891 3.54601C21 3.75992 21 4.03995 21 4.6V6.33726C21 6.58185 21 6.70414 20.9724 6.81923C20.9479 6.92127 20.9075 7.01881 20.8526 7.10828C20.7908 7.2092 20.7043 7.29568 20.5314 7.46863L14.4686 13.5314C14.2957 13.7043 14.2092 13.7908 14.1474 13.8917C14.0925 13.9812 14.0521 14.0787 14.0276 14.1808C14 14.2959 14 14.4182 14 14.6627V17L10 21V14.6627C10 14.4182 10 14.2959 9.97237 14.1808C9.94787 14.0787 9.90747 13.9812 9.85264 13.8917C9.7908 13.7908 9.70432 13.7043 9.53137 13.5314L3.46863 7.46863C3.29568 7.29568 3.2092 7.2092 3.14736 7.10828C3.09253 7.01881 3.05213 6.92127 3.02763 6.81923C3 6.70414 3 6.58185 3 6.33726V4.6Z" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <button
+                    id="layers_button"
+                    class="btn btn-primary header__button btn-icon"  
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#layers_offcanvas"
+                    aria-label="Слои"
+                    title="Слои"
+                    disabled
+                    >
+                    <img
+                        class="icon-layers"
+                        src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+CiA8cGF0aCBmaWxsPSIjNDk1MDU3IiBmaWxsLW9wYWNpdHk9Ii4yNSIgZD0iTTEyIDNsOSA1LTkgNS05LTV6Ii8+CiA8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiM0OTUwNTciIHN0cm9rZS13aWR0aD0iMS44IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGQ9Ik0zIDEybDkgNSA5LTVNMyAxNmw5IDUgOS01Ii8+Cjwvc3ZnPg=="
+                        width="20"
+                        height="20"
+                        alt="Слои"
+                        draggable="false"
+                        style="filter: invert(1) brightness(2);" 
+                    />
+                    </button>            
+                <button type="button" class="btn btn-primary header__button tool_button" id="eyedropper_button" disabled data-toggle="tooltip" title="Пипетка: получение цвета из изображения" data-bs-toggle="offcanvas" data-bs-target="#colorData" aria-controls="colorData">
+                    <svg class="tool_button__svg" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21.0303 2.96967C19.6329 1.5722 17.3671 1.5722 15.9697 2.96967L14 4.93935L13.9874 4.92679C13.304 4.24337 12.196 4.24337 11.5125 4.92679L10.9268 5.51258C10.2433 6.19599 10.2433 7.30403 10.9268 7.98745L10.9394 8.00009L4.15914 14.7803C3.73719 15.2023 3.50013 15.7746 3.50013 16.3713V17.0588L2.21981 19.406C1.38379 20.9387 3.06141 22.6164 4.59412 21.7803L6.94138 20.5H7.62881C8.22555 20.5 8.79785 20.263 9.2198 19.841L16.0001 13.0607L16.0125 13.0732C16.696 13.7567 17.804 13.7567 18.4874 13.0732L19.0732 12.4875C19.7566 11.804 19.7566 10.696 19.0732 10.0126L19.0606 10L21.0303 8.03033C22.4278 6.63286 22.4278 4.36713 21.0303 2.96967ZM12.0001 9.06075L14.9394 12.0001L8.15914 18.7803C8.01849 18.921 7.82773 19 7.62881 19H6.75013C6.62465 19 6.50116 19.0315 6.391 19.0916L3.87584 20.4635C3.80671 20.5012 3.75536 20.5029 3.717 20.4961C3.67227 20.4882 3.62232 20.4638 3.57935 20.4208C3.53638 20.3778 3.51196 20.3279 3.50405 20.2831C3.49726 20.2448 3.49895 20.1934 3.53665 20.1243L4.90856 17.6091C4.96865 17.499 5.00014 17.3755 5.00014 17.25V16.3713C5.00014 16.1724 5.07915 15.9816 5.21981 15.841L12.0001 9.06075Z" fill="#fff"/>
+                    </svg>
+                </button>
+                <button type="button" class="btn btn-primary header__button tool_button" id="hand_button" disabled data-toggle="tooltip" title="Рука: перемещение изображения">
+                    <svg class="tool_button__svg" fill="#fff" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:serif="http://www.serif.com/" viewBox="0 0 32 32" version="1.1" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M13.183,3.218C12.852,3.082 12.461,3 12,3C9.226,3 9.002,6.032 9.002,6.032C9.001,6.051 9,6.07 9,6.089L9,11.151C8.711,11.055 8.379,11 8,11C5.226,11 5.002,14.032 5.002,14.032C5.001,14.051 5,14.07 5,14.089C5,14.089 5,17.012 5,17.012C5.029,22.659 6.841,31 16,31C18.769,31 20.853,30.475 22.425,29.458C24.299,28.245 25.486,26.326 26.168,23.606C26.794,21.111 27,17.902 27,13.934L27,8.949C27,8.93 26.999,8.91 26.998,8.891C26.998,8.891 26.785,5.912 24,5.912C23.621,5.912 23.29,5.968 23,6.066L23,6.037C23,6.018 22.999,5.999 22.998,5.979C22.998,5.979 22.785,3 20,3C19.555,3 19.176,3.078 18.852,3.209C18.596,2.321 17.903,1 16.043,1C14.214,1 13.474,2.326 13.183,3.218ZM17,14C17,14 17,4.051 17,4.045C16.992,3.87 16.906,3 16.043,3C15.155,3 15.02,3.903 15,4.122L15,14C15,14.552 14.552,15 14,15C13.448,15 13,14.552 13,14C13,14 13,6.065 12.999,6.053C12.983,5.85 12.862,5 12,5C11.119,5 11.013,5.906 11,6.109L11,17C11,17.552 10.552,18 10,18C9.448,18 9,17.552 9,17C9,17 9,14.064 8.999,14.052C8.983,13.85 8.862,13 8,13C7.119,13 7.013,13.906 7,14.109L7,16.995C7.024,21.761 8.279,29 16,29C18.295,29 20.036,28.622 21.339,27.779C22.818,26.822 23.69,25.266 24.229,23.12C24.823,20.75 25,17.702 25,13.934C25,13.934 25,8.976 24.999,8.964C24.983,8.761 24.862,7.911 24,7.911C23.119,7.911 23.013,8.818 23,9.02L23,14.199C23,14.751 22.552,15.198 22,15.198C21.448,15.198 21,14.751 21,14.199L21,10.5C21,10.5 21,6.064 20.999,6.053C20.983,5.85 20.862,5 20,5C19.119,5 19.013,5.906 19,6.109L19,14C19,14.552 18.552,15 18,15C17.448,15 17,14.552 17,14Z"></path></svg>
+                </button>
+                <button type="button" class="btn btn-primary header__button tool_button" id="color_button" disabled data-toggle="tooltip" title="Цветовая коррекция" data-bs-toggle="offcanvas" data-bs-target="#color_correction">
+                    <svg class="tool_button__svg" viewBox="0 0 5.8208335 5.8208335" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" id="svg8" inkscape:version="0.92.4 (5da689c313, 2019-01-14)" sodipodi:docname="dark_filter-color-curves.svg">
+                        <defs id="defs2">
+                        <linearGradient id="linearGradient1359" inkscape:collect="always">                    
+                        <stop id="stop1355" offset="0" style="stop-color:#d2d2d2;stop-opacity:0"/>                    
+                        <stop id="stop1357" offset="1" style="stop-color:#d2d2d2;stop-opacity:1"/>                  
+                        </linearGradient>                  
+                        <linearGradient inkscape:collect="always" id="linearGradient1291">                   
+                        <stop style="stop-color:#373737;stop-opacity:0" offset="0" id="stop1287"/>                  
+                        <stop style="stop-color:#373737;stop-opacity:1" offset="1" id="stop1289"/>                 
+                        </linearGradient>                
+                        <linearGradient id="linearGradient1167" inkscape:collect="always">              
+                        <stop id="stop1163" offset="0" style="stop-color:#d2d2d2;stop-opacity:1"/>                   
+                        <stop id="stop1165" offset="1" style="stop-color:#d2d2d2;stop-opacity:0"/>                
+                        </linearGradient>                 
+                        <linearGradient inkscape:collect="always" id="linearGradient1081">                
+                        <stop style="stop-color:#373737;stop-opacity:1" offset="0" id="stop1077"/>           
+                        <stop style="stop-color:#373737;stop-opacity:0" offset="1" id="stop1079"/>                   
+                        </linearGradient>                    
+                        <linearGradient inkscape:collect="always" xlink:href="#linearGradient1081" id="linearGradient1083" x1="0.26458332" y1="294.75103" x2="5.5562498" y2="294.75103" gradientUnits="userSpaceOnUse" gradientTransform="translate(-5.82 .265)"/>                 
+                        <linearGradient gradientTransform="translate(0 -2.646)" inkscape:collect="always" xlink:href="#linearGradient1167" id="linearGradient1083-2" x1="0.26458332" y1="294.75104" x2="5.5562496" y2="294.75104" gradientUnits="userSpaceOnUse"/>                    
+                        <linearGradient gradientTransform="matrix(.94118 0 0 1 290.448 -294.354)" inkscape:collect="always" xlink:href="#linearGradient1291" id="linearGradient1083-2-6-6" x1="1.0583628" y1="294.88336" x2="5.5562496" y2="294.88336" gradientUnits="userSpaceOnUse"/>              
+                        <linearGradient gradientTransform="matrix(.94118 0 0 1 -6.552 1.587)" inkscape:collect="always" xlink:href="#linearGradient1359" id="linearGradient1083-2-6-6-2" x1="1.0583628" y1="294.88336" x2="5.5562496" y2="294.88336" gradientUnits="userSpaceOnUse"/>                    
+                        <linearGradient gradientTransform="matrix(.94118 0 0 1 290.448 -294.354)" inkscape:collect="always" xlink:href="#linearGradient1359" id="linearGradient1083-2-6-6-2-7" x1="1.0583628" y1="294.88336" x2="5.5562496" y2="294.88336" gradientUnits="userSpaceOnUse"/>               
+                        </defs> 
+                        <g inkscape:label="Calque 1" inkscape:groupmode="layer" id="layer1" transform="translate(0 -291.18)">
+                        <path style="fill:#fff;fill-opacity:.37647059;stroke:none;stroke-width:.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="M1.587 295.412h3.44v-3.44z" id="path1266" inkscape:connector-curvature="0" sodipodi:nodetypes="cccc"/>
+                        <circle style="opacity:1;vector-effect:none;fill:#fff;fill-opacity:1;stroke:none;stroke-width:.52916664;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:3.20000005;stroke-opacity:1" id="path1258" cx="1.5875" cy="295.41248" r="0.52916664"/>
+                        <circle style="opacity:1;vector-effect:none;fill:#fff;fill-opacity:1;stroke:none;stroke-width:.52916664;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:3.20000005;stroke-opacity:1" id="path1260" cx="5.0270834" cy="291.9729" r="0.52916664"/>
+                        <path style="color:#000000;font-style:normal;font-variant:normal;font-weight:400;font-stretch:normal;font-size:medium;line-height:normal;font-family:sans-serif;font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-feature-settings:normal;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;text-orientation:mixed;dominant-baseline:auto;baseline-shift:baseline;text-anchor:start;white-space:normal;shape-padding:0;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;vector-effect:none;fill:#fff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:.26458332;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate" d="m4.933 291.88-3.439 3.438.188.188 3.438-3.439z" id="path1262" inkscape:connector-curvature="0" sodipodi:nodetypes="ccccc"/>
+                        <rect style="opacity:1;vector-effect:none;fill:url(#linearGradient1083-2-6-6-2);fill-opacity:1;stroke:none;stroke-width:.5133689;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:3.20000005;stroke-opacity:1" id="rect1075-7-2-9-3" width="4.2333641" height="0.52917928" x="-5.5562501" y="296.20624" transform="scale(-1 1)"/>
+                        <rect style="opacity:1;vector-effect:none;fill:url(#linearGradient1083-2-6-6-2-7);fill-opacity:1;stroke:none;stroke-width:.5133689;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:3.20000005;stroke-opacity:1" id="rect1075-7-2-9-3-2" width="4.2333641" height="0.52917928" x="291.4437" y="0.26457071" transform="matrix(0 1 1 0 0 0)"/>
+                        
+                        </g>
+                        
+                    </svg>
+                </button>
+            </header>
+            <main class="bd-highlight main con">
+                <div class="modal fade" id="loadModal" tabindex="-1" aria-labelledby="loadModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="loadModalLabel">Загрузить изображение</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="url_load_input" class="form-label">Загрузить по URL</label>
+                                    <input type="url" class="form-control" id="url_load_input">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="file_load_input" class="form-label">Загрузить с компьютера</label>
+                                    <input type="file" class="form-control" id="file_load_input" accept=".png,.jpg,.jpeg,.gb7,image/png,image/jpeg">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="load_button">Загрузить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <dialog id="dialog" aria-label="Изменить размер изображения">
+                    <form action="">
+                        <p id="dialog_before_px">До изменений:</p>
+                        <p id="dialog_after_px">После изменений:</p>
+                        <input type="radio" name="units" id="radio_px" class="form-check-input" value="px" checked>
+                        <label for="radio_px">px</label>
+                        <input type="radio" name="units" id="radio_percent" class="form-check-input" value="%">
+                        <label for="radio_percent" class="form-check-label">%</label>
+                        <div class="d-flex flex-column mt-3">
+                            <div class="d-flex">
+                            <div>
+                                <div class="input-group mb-3">
+                                <span class="input-group-text" id="dialog_width">Ширина</span>
+                                <input type="number" id="input_width" class="form-control" aria-describedby="dialog_width">
+                                <span class="input-group-text dialog_units"></span>
+                                </div>
+                                <div class="input-group mb-3">
+                                <span class="input-group-text" id="dialog_height">Высота</span>
+                                <input type="number" id="input_height" class="form-control" aria-describedby="dialog_height">
+                                <span class="input-group-text dialog_units"></span>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="form-check ms-3 align-self-start" style="min-width:220px;">
+                                <input class="form-check-input ratio_check__input" type="checkbox" id="keep_ratio" checked>
+                                <label class="form-check-label" for="keep_ratio">Сохранить пропорции</label>
+                            </div>
+                            <span class="oz-tooltip-wrap">
+                            <select id="select_algorithm" name="select_algorithm">
+                                <option value="bilinear" selected>Билинейный</option>
+                                <option value="nearest" >Ближайший сосед</option>
+                                </select>
+                                <span class="oz-tooltip" aria-hidden="false">
+                                    <span class="oz-tooltip__icon">i</span>
+                                </span>
+                            </span>
+                        </div>
+                        <div class="mt-3">
+                            <button type="button" class="btn btn-primary" id="submit_dialog_button">OK</button>
+                            <button type="button" class="btn btn-primary" id="close_dialog_button">Отмена</button>
+                        </div>
+                    </form>
+                </dialog>
+                <div class="offcanvas offcanvas-end color_data" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="colorData" aria-labelledby="colorData">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="colorDataLabel">Информация о цветах:</h5>
+                        <button type="button" class="btn-close close_colorpanel_button" data-bs-dismiss="offcanvas" aria-label="Закрыть"></button>
+                    </div>
+                    <p class="color_desc">Выбор цвета 1 - ЛКМ, выбор цвета 2 - ctrl + ЛКМ</p>
+                    <div class="offcanvas-body">   
+                        <div class="color_con">
+                            <div class="color">
+                                <p class="color_num">Цвет 1</p>
+                                <p class="color_coord">x: y:</p>
+                                <div class="color_swatch"></div>
+                                <p class="color_rgb" data-toggle="tooltip" title="R, G, B - красный, зеленый, синий цвета, диапазон значений от 0 до 255">RGB</p>
+                                <p class="color_xyz" data-toggle="tooltip" title="
+        Система основана на трех физически несуществующих цветах, которые 
+        выполняют вспомогательную математическую роль. X может быть в 
+        диапазоне [0:0.9505], Y - [0:1], Z - [0:1.0888], конечные точки
+        интервалов - цветовые координаты стандартного белого цвета."
+                                >XYZ:</p>
+                                <p class="color_lab" data-toggle="tooltip" title="L — нормированная светлота [0:100];
+        а — ось, по которой отложены градации от красного к зелёному [-100:+100];
+        b — ось с градациями от жёлтого к синему [-100:+100]"
+                                >Lab</p>
+                                <p class="color_oklch" title="OKLch (D65): L — перцептивная светлота [0..1], C — хрома (обычно ≤0.4), h — оттенок [0..360°]">OKLch:</p>
+                            </div>  
+                            <div class="color">
+                                <p class="color_num">Цвет 2</p>
+                                <p class="color_coord">x: y:</p>
+                                <div class="color_swatch"></div>
+                                <p class="color_rgb" data-toggle="tooltip" title="R, G, B - красный, зеленый, синий цвета, диапазон значений от 0 до 255">RGB:</p>
+                                <p class="color_xyz" data-toggle="tooltip" title="
+        Система основана на трех физически несуществующих цветах, которые 
+        выполняют вспомогательную математическую роль. X может быть в 
+        диапазоне [0:0.9505], Y - [0:1], Z - [0:1.0888], конечные точки
+        интервалов - цветовые координаты стандартного белого цвета."
+                                >XYZ:</p>
+                                <p class="color_lab" data-toggle="tooltip" title="L — нормированная светлота [0:100];
+        а — ось, по которой отложены градации от красного к зелёному [-100:+100];
+        b — ось с градациями от жёлтого к синему [-100:+100]"
+                                >Lab</p>
+                                <p class="color_oklch" title="OKLch (D65): L — перцептивная светлота [0..1], C — хрома (обычно ≤0.4), h — оттенок [0..360°]">OKLch:</p>
+                            </div>
+                        </div>
+                        <p class="contrast_label">Контраст:</p>
+                        <p class="contrast_value"></p>
+                        <p class="contrast_alert">Недостаточный контраст!</p>
+                    </div>
+                </div>
+                <div class="offcanvas offcanvas-end color_correction" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="color_correction" aria-labelledby="color_correction">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="color_correction_label">Цветовая коррекция</h5>
+                        <button type="button" class="btn-close close_colorpanel_button" data-bs-dismiss="offcanvas" aria-label="Закрыть" id="close_color_correction_button"></button>
+                    </div>
+                    <div class="mb-2" id="cc_mode_group" style="display:flex; gap:8px; align-items:center;">
+                    <span style="font-size:12px; opacity:.8;">Режим:</span>
+                    <label style="display:flex; gap:4px; align-items:center;">
+                        <input type="radio" name="cc_mode" id="cc_mode_rgb" checked>
+                        <span>RGB</span>
+                    </label>
+                    <label style="display:flex; gap:4px; align-items:center;">
+                        <input type="radio" name="cc_mode" id="cc_mode_alpha">
+                        <span>Alpha</span>
+                    </label>
+                    </div>
+                    <div id="chart_container"></div>
+                    <form class="offcanvas-body">   
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">in</span>
+                            <input type="number" class="form-control color_correction_input" id="first_in_coord_input" value="0" min="0" max="255">
+                            <span class="input-group-text">out</span>
+                            <input type="number" class="form-control color_correction_input" id="first_out_coord_input" value="0" min="0" max="255">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">in</span>
+                            <input type="number" class="form-control color_correction_input" id="second_in_coord_input" value="255" min="0" max="255">
+                            <span class="input-group-text">out</span>
+                            <input type="number" class="form-control color_correction_input" id="second_out_coord_input" value="255" min="0" max="255">
+                        </div>
+                        <input class="form-check-input correction_checkbox_checkbox" type="checkbox" value="" id="color_correction_checkbox">
+                        <label class="form-check-label correction_checkbox_label" for="color_correction_checkbox">
+                            preview
+                        </label>
+                        <div style="margin-top:5px">
+                        <button type="reset" class="btn btn-primary submit_correction_button" id="submit_color_correction_button">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" width="24px" height="24px" fill="white"><path d="M57.658,12.643c1.854,1.201,2.384,3.678,1.183,5.532l-25.915,40c-0.682,1.051-1.815,1.723-3.064,1.814	C29.764,59.997,29.665,60,29.568,60c-1.146,0-2.241-0.491-3.003-1.358L13.514,43.807c-1.459-1.659-1.298-4.186,0.36-5.646	c1.662-1.46,4.188-1.296,5.646,0.361l9.563,10.87l23.043-35.567C53.329,11.971,55.806,11.442,57.658,12.643z"/></svg>    
+                        </button>
+                        <button type="reset" class="btn btn-primary" id="reset_color_correction_button">
+                            <svg width="24px" height="24px" fill="white" viewBox="0 0 512 512" data-name="Layer 1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"><path d="M64,256H34A222,222,0,0,1,430,118.15V85h30V190H355V160h67.27A192.21,192.21,0,0,0,256,64C150.13,64,64,150.13,64,256Zm384,0c0,105.87-86.13,192-192,192A192.21,192.21,0,0,1,89.73,352H157V322H52V427H82V393.85A222,222,0,0,0,478,256Z"/></svg>
+                        </button>
+                        </div>
+                    </form>
+                </div>
+                <!-- Offcanvas: Панель слоёв -->
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="layers_offcanvas" style="--bs-offcanvas-width: 420px;">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title">Слои</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+                </div>
+                <div class="offcanvas-body d-flex flex-column gap-3">
+
+                    <div class="d-flex align-items-center justify-content-between">
+                    <div class="text-muted small">Макс. 2 слоя</div>
+                    <button id="layers_add_btn" class="btn btn-sm btn-primary">Добавить слой</button>
+                    </div>
+
+                    <div>
+                    <div class="fw-semibold mb-2">Список слоёв</div>
+                    <div id="layers_list"></div>
+                    <div id="layers_empty" class="text-muted small p-2">Нет слоёв. Добавьте первый слой.</div>
+                    </div>
+
+                    <div class="mt-2">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="fw-semibold">Альфа-каналы</div>
+                        <div class="d-flex align-items-center gap-2">
+                        <input type="file" id="alpha_file_input" accept="image/*" hidden>
+                        <button id="alpha_add_btn" class="btn btn-sm btn-outline-secondary">Добавить</button>
+                        </div>
+                    </div>
+                    <div id="alpha_list" class="mt-2"></div>
+                    <div id="alpha_empty" class="text-muted small p-2">Нет альфа-каналов.</div>
+                    </div>
+                </div>
+                </div>
+
+                <!-- Modal: Добавить слой -->
+                <div class="modal fade" id="add_layer_modal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Добавить слой</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="mb-2">
+                        <label class="form-label">Название</label>
+                        <input id="add_layer_name" class="form-control" placeholder="Например, Слой 2">
+                        </div>
+                        <div class="mb-2">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="add_layer_mode" id="add_layer_mode_file" checked>
+                            <label class="form-check-label" for="add_layer_mode_file">Из файла</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="add_layer_mode" id="add_layer_mode_color">
+                            <label class="form-check-label" for="add_layer_mode_color">Цветом</label>
+                        </div>
+                        </div>
+                        <div class="mb-2">
+                        <label class="form-label">Файл изображения</label>
+                        <input id="add_layer_file" type="file" accept="image/*" class="form-control">
+                        </div>
+                        <div class="mb-2" id="add_layer_color_row" style="display:none">
+                        <label class="form-label">Цвет заливки</label>
+                        <input id="add_layer_color" type="color" value="#000000" class="form-control form-control-color">
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button id="add_layer_create" class="btn btn-primary">Создать слой</button>
+                        <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
+                    </div>
+                    </div>
+                </div>
+                </div>
+
+                <!-- ШАБЛОНЫ (template) ДЛЯ ЭЛЕМЕНТОВ СПИСКА -->
+                <template id="tpl_layer_item">
+                <div class="layer-item d-flex align-items-center gap-2 p-1 border rounded mb-2">
+                    <input type="checkbox" class="form-check-input js-vis" title="Показать/скрыть">
+                    <canvas class="rounded js-preview" width="64" height="40" style="background:#fff;border:1px solid #eee"></canvas>
+                    <div class="flex-grow-1">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <button type="button" class="btn btn-link p-0 m-0 text-start js-name"></button>
+                        <div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-secondary js-up" title="Выше">↑</button>
+                        <button class="btn btn-outline-secondary js-down" title="Ниже">↓</button>
+                        <button class="btn btn-outline-danger js-del" title="Удалить">✕</button>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-2 mt-1">
+                        <label class="small text-muted">Непрозрачность</label>
+                        <input type="range" min="0" max="100" class="form-range js-opacity" style="width:120px">
+                        <select class="form-select form-select-sm js-blend" style="max-width:150px"
+                                title="Режим наложения:
+                — Normal: обычная альфа-композиция
+                — Multiply: умножает цвета, затемняет
+                — Screen: инверсия умножения, осветляет
+                — Overlay: комбинирует multiply/screen по фону">
+                        <option value="normal">normal</option>
+                        <option value="multiply">multiply</option>
+                        <option value="screen">screen</option>
+                        <option value="overlay">overlay</option>
+                        </select>
+                    </div>
+                    </div>
+                </div>
+                </template>
+
+                <template id="tpl_alpha_item">
+                <div class="alpha-item d-flex align-items-center gap-2 p-1 border rounded mb-2">
+                    <input type="checkbox" class="form-check-input js-vis" title="Показать/скрыть">
+                    <canvas class="rounded js-preview" width="64" height="40" style="background:#fff;border:1px solid #eee"></canvas>
+                    <div class="flex-grow-1 d-flex align-items-center justify-content-between">
+                    <strong class="js-name"></strong>
+                    <button class="btn btn-sm btn-outline-danger js-del" title="Удалить">✕</button>
+                    </div>
+                </div>
+                </template>
+                <div class="offcanvas offcanvas-end filter_offcanvas" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="filter_offcanvas" aria-labelledby="filter_offcanvas" style='--bs-offcanvas-height: 600px;'>
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="filter_offcanvas_label">Фильтрация</h5>
+                        <button type="button" class="btn-close close_filter_offcanvas_button" data-bs-dismiss="offcanvas" aria-label="Закрыть"></button>
+                    </div>
+                    <form class="offcanvas-body">   
+                        <select class="form-select" name="filter_select" id="filter_select">
+                            <option value="default" selected>Тождественное отображение</option>
+                            <option value="sharp">Повышение резкости</option>
+                            <option value="gauss">Фильтр Гаусса</option>
+                            <option value="rectblur">Прямоугольное размытие</option>
+                            <option value="prewittX">Оператор Прюитта (X)</option>
+                            <option value="prewittY">Оператор Прюитта (Y)</option>
+                        </select>
+                        <div class="input-group mb-3 mt-3">
+                            <input type="number" class="form-control filter_offcanvas_input" value="0">
+                            <input type="number" class="form-control filter_offcanvas_input" value="0">
+                            <input type="number" class="form-control filter_offcanvas_input" value="0">
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="number" class="form-control filter_offcanvas_input" value="0">
+                            <input type="number" class="form-control filter_offcanvas_input" value="1">
+                            <input type="number" class="form-control filter_offcanvas_input" value="0">
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="number" class="form-control filter_offcanvas_input" value="0">
+                            <input type="number" class="form-control filter_offcanvas_input" value="0">
+                            <input type="number" class="form-control filter_offcanvas_input" value="0">
+                        </div>
+                        <input class="form-check-input correction_checkbox_checkbox" type="checkbox" value="" id="filter_offcanvas_checkbox">
+                        <label class="form-check-label correction_checkbox_label" for="filter_offcanvas_checkbox">
+                            preview
+                        </label>
+                        <button type="reset" class="btn btn-primary submit_correction_button" id="submit_filter_offcanvas_button">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" width="24px" height="24px" fill="white"><path d="M57.658,12.643c1.854,1.201,2.384,3.678,1.183,5.532l-25.915,40c-0.682,1.051-1.815,1.723-3.064,1.814	C29.764,59.997,29.665,60,29.568,60c-1.146,0-2.241-0.491-3.003-1.358L13.514,43.807c-1.459-1.659-1.298-4.186,0.36-5.646	c1.662-1.46,4.188-1.296,5.646,0.361l9.563,10.87l23.043-35.567C53.329,11.971,55.806,11.442,57.658,12.643z"/></svg>    
+                        </button>
+                        <button type="reset" class="btn btn-primary" id="reset_filter_offcanvas_button">
+                            <svg width="24px" height="24px" fill="white" viewBox="0 0 512 512" data-name="Layer 1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"><path d="M64,256H34A222,222,0,0,1,430,118.15V85h30V190H355V160h67.27A192.21,192.21,0,0,0,256,64C150.13,64,64,150.13,64,256Zm384,0c0,105.87-86.13,192-192,192A192.21,192.21,0,0,1,89.73,352H157V322H52V427H82V393.85A222,222,0,0,0,478,256Z"/></svg>
+                        </button>
+                    </form>
+                </div>
+                <div class="resizing_con">
+                    <canvas id="canvas" class="border border-2 content-list"></canvas>
+                </div>
+            </main>
+            <footer class="d-flex justify-content-center bd-highlight bg-secondary text-white py-2 footer">
+                <div class="d-flex justify-content-between footer_con">
+                    <p id="image_size" class="footer_item m-0"></p>
+                    <p id="image_depth" class="footer_item m-0"></p>
+                    <p id="pixel_coordinates" class="footer_item m-0"></p>
+                    <div>
+                        <div id="pixel_color_block" class="footer_item m-0"></div>
+                        <p id="pixel_color" class="m-0"></p>
+                    </div>
+                    <div class="scale_con footer_item">
+                        <label for="scale_range" class="form-label m-0" id="scale_label">Масштаб</label>
+                        <input type="range" class="form-range m-0" id="scale_range" name="scale_range" min="12" max="300" step="1"/>
+                        <input type="number" class="form-control" id="scale_num" min="12" max="300" step="1">
+                        <span id="scale_percent">%</span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <script src="https://cdn.anychart.com/releases/8.12.1/js/anychart-base.min.js"></script>
+        <script type="module">
+        import loadImage from './src/loadImage/loadImage.js';
+        import initLayersPanel from './src/layers/layersPanel.js';
+        loadImage();
+
+        initLayersPanel();
+        </script>
+    <div class="oz-tip-global" id="oz-global-tip" popover="manual"></div>
+    <script>
+(function () {
+    const select = document.getElementById('select_algorithm');
+    if (!select) return;
+
+    const icon = select.parentElement?.querySelector('.oz-tooltip__icon');
+    const tip  = document.getElementById('oz-global-tip');
+    if (!icon || !tip) return;
+
+  // заполнение контента
+    function fillTip(el){
+        el.replaceChildren();
+        const b1=document.createElement('b'); b1.textContent='Билинейная интерполяция';
+        const i1=document.createElement('i'); i1.textContent='Учитывает 4 ближайших пикселя и усредняет их вклад. Даёт гладкие переходы, хорошо подходит для уменьшения и умеренного увеличения. Может слегка размывать мелкие детали.';
+        const b2=document.createElement('b'); b2.textContent='Ближайший сосед';
+        const i2=document.createElement('i'); i2.textContent='Берёт значение ближайшего пикселя без усреднения. Сохраняет резкие границы и пиксель-арт, но при увеличении заметны «ступеньки» и aliasing.';
+        el.append(b1,i1,b2,i2);
+    }
+
+    let hideT;
+    function showTip(){
+    clearTimeout(hideT);
+    fillTip(tip);
+
+    // показываем как popover (→ top layer)
+    if (!tip.matches(':popover-open')) tip.showPopover();
+
+    // позиционируем относительно иконки
+    const r = icon.getBoundingClientRect();
+    tip.style.left = Math.round(r.left + r.width/2) + 'px';
+    tip.style.top  = '0px';
+
+    // лёгкая анимация появления
+    tip.classList.add('show');
+
+    // рассчитываем окончательное положение (вверх, если влазит; иначе вниз)
+    const h = tip.offsetHeight;
+    let top = r.top - h - 10;
+    if (top < 8) top = r.bottom + 10;
+    tip.style.top = Math.round(top) + 'px';
+    tip.style.transform = 'translate(-50%, 0)';
+    }
+
+    function hideTip(){
+        hideT = setTimeout(() => {
+        tip.classList.remove('show');
+        if (tip.matches(':popover-open')) tip.hidePopover();
+        }, 60);
+    }
+
+    icon.addEventListener('mouseenter', showTip);
+    icon.addEventListener('mouseleave', hideTip);
+    window.addEventListener('scroll',  hideTip, {passive:true});
+    window.addEventListener('resize',  hideTip, {passive:true});
+    })();
+    </script>
+    </body>
+    </html>

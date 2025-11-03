@@ -1,0 +1,223 @@
+.header {
+    height: 57px;
+}
+
+.main {
+    position: relative;
+    height: 60vh;
+    flex-grow: 1;
+    overflow: auto;
+}
+
+.resizing_con {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.footer {
+    height: 5vh;
+}
+
+.wrap {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.footer_con {
+    width: 100vw;
+    max-width: 1000px;
+}
+
+.scale_con {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    width: 380px;
+}
+
+.footer_item {
+    margin-left: 30px;
+}
+
+.ratio_check__input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.ratio_check__box {
+    margin-top: 5px;
+    width: 2em;
+    height: 2em;
+    background-image: url(./img/lock-open.svg);
+    background-size: contain;
+}
+
+.ratio_check__box:hover {
+    opacity: 0.7;
+}
+
+.ratio_check__input:checked + .ratio_check__box {
+    background-image: url(./img/lock-closed.svg);
+}
+
+.tool_button__svg {
+    width: 24px;
+    height: 24px;
+    pointer-events: none;
+}
+
+.header__button {
+    margin-left: 10px;
+}
+
+.active {
+    border-style: inset;
+}
+
+.offcanvas {
+    height: 550px;
+    border: 1px solid gray !important;
+}
+
+.color_con{
+    display: flex;
+}
+
+.color {
+    width: 220px;
+    margin-right: 10px;
+}
+
+.color_swatch {
+    width: 50px;
+    height: 50px;
+    border: 1px solid gainsboro;
+    border-radius: 25px;
+}
+
+.color_rgb {
+    margin-top: 10px;
+}
+
+.color_desc {
+    margin-left: 15px;
+}
+
+.contrast_label {
+    margin-top: 20px;
+    font-size: 20px;
+    display: none;
+}
+
+.contrast_value {
+    font-size: 20px;
+}
+
+.contrast_alert {
+    color: red;
+    display: none;
+}
+
+#canvas {
+    display: block;
+    border: 0 !important;
+    position: absolute;
+}
+
+#pixel_color_block {
+    border: 1px solid #fff; 
+    height: 14px; 
+    width: 14px;    
+    display: none;
+}
+
+#pixel_color {
+    display: inline-block;
+}
+
+#scale_label {
+    display: none;
+}
+
+#scale_range {
+    display: none;
+    width: 200px;
+}
+
+#scale_num {
+    display: none;
+    width: 80px;
+    height: 25px;
+}
+
+#scale_percent {
+    display: none;
+}
+
+#dialog {
+    width: 290px;
+}
+
+.correction_checkbox_checkbox {
+    width: 25px;
+    height: 25px;
+    margin-top: 7px;
+    margin-right: 5px;
+    margin-left: 6px;
+}
+
+.correction_checkbox_label {
+    font-size: 20px;
+    margin-right: 125px;
+}
+
+.submit_correction_button {
+    margin-right: 15px;
+}
+
+.color_correction {
+    height: 630px;
+}
+
+.filter_offcanvas {
+    height: 360px;
+}
+
+#chart_container {
+    height: 380px;
+    width: 380px;
+}
+/* Контейнер для селекта метода и иконки */
+.oz-tooltip-wrap{
+    display:inline-flex;
+    align-items:center;
+  gap:.5rem;               /* расстояние между селектом и иконкой */
+}
+
+/* селект в одну строку с иконкой */
+#select_algorithm{
+    display:inline-block;
+    vertical-align:middle;
+}
+
+.oz-tooltip{position:relative;display:inline-flex;align-items:center;margin-left:.5rem}
+.oz-tooltip__icon{width:18px;height:18px;line-height:18px;border-radius:50%;
+    border:1px solid currentColor;font-size:12px;text-align:center;user-select:none;
+    font-weight:600;cursor:default}
+.oz-tooltip__bubble{display:none}
+
+/* Глобальный контейнер тултипа — висит в body, перекрывает модалки */
+.oz-tip-global{
+    position:fixed; /* не зависит от переполнения диалога */
+    min-width:240px;max-width:360px;padding:.5rem .6rem;border-radius:.5rem;
+    background:#111;color:#fff;font-size:.85rem;line-height:1.25;border:1px solid #0003;
+    box-shadow:0 6px 18px #0006;opacity:0;transform:translateY(4px);
+    transition:opacity .12s ease, transform .12s ease;
+    z-index:9999; pointer-events:none; /* поверх всего и без захвата курсора */
+}
+.oz-tip-global b{display:block;margin:.2rem 0 .1rem}
+.oz-tip-global i{opacity:.85;font-style:normal}
+.oz-tip-global.show{opacity:1;transform:translateY(0)}
