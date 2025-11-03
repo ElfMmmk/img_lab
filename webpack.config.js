@@ -10,7 +10,7 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-          template: path.resolve(__dirname, 'public', 'index.html'),
+            template: path.resolve(__dirname, 'public', 'index.html'),
         })
     ],
     module: {
@@ -32,4 +32,10 @@ module.exports = {
     devServer: {
         port: 3000,
     },
+    output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'dist'),
+    publicPath: ''   // относительные пути → работает на GitHub Pages в подкаталоге
+}
+
 }
